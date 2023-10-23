@@ -7,9 +7,15 @@ import ESNLogo from "../public/img/ESNLogo.png";
 import icon from "../public/img/icon.png";
 import { client } from "../lib/contentful";
 import { Wheel } from "../components/Wheel";
-export default function Home({ winCategorys }) {
+import React, { useState } from "react";
+
+export default function Home({ winCategorys, code }) {
   console.log(winCategorys);
-  const values = ["C", "D", "A", "B", "C", "D", "A", "B", "C", "D"];
+  const [codeInput, setCodeInput] = useState("");
+  const handleInput = (event) => {
+    event.preventDefault();
+    setCodeInput(event.target.value.toUpperCase());
+  };
 
   return (
     <div className="overflow-hidden">
@@ -24,20 +30,32 @@ export default function Home({ winCategorys }) {
         <Image src={background} fill alt="" />
       </div>
       <HorizontalGallery winCategorys={winCategorys} />
-      <div className="w-screen h-screen bg-white flex items-center justify-center text-black font-bold text-7xl">
-        <p className="animate-bounce">Glücksrad</p>
-        <Wheel values={values} />
-      </div>{" "}
+      <div className="w-screen h-screen bg-stone-900 flex pt-64 justify-center text-white font-bold text-7xl relative">
+        <div className="text-center">
+          <div className="mb-10">Gebe hier den Code ein!</div>
+          <input
+            className="w-1/2 h-1/6 rounded-lg text-black text-center"
+            value={codeInput}
+            onChange={handleInput}
+          />
+        </div>
+
+        {/* <p className="">Glücksrad</p>
+        <div style={{ bottom: "-53%" }} className="absolute ">
+          <Wheel code={code} winCategorys={winCategorys} />
+        </div> */}
+      </div>
     </div>
   );
 }
 
 export const getStaticProps = async () => {
-  const response = await client.getEntries({ content_type: "winCategory" });
-
+  const winCategory = await client.getEntries({ content_type: "winCategory" });
+  const code = await client.getEntries({ content_type: "code" });
   return {
     props: {
-      winCategorys: response.items,
+      code: code.items,
+      winCategorys: winCategory.items,
       revalidate: 70,
     },
   };
