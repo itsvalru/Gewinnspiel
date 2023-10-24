@@ -12,11 +12,35 @@ import React, { useState } from "react";
 export default function Home({ winCategorys, code }) {
   console.log(winCategorys);
   const [codeInput, setCodeInput] = useState("");
+  const [showWheel, setShowWheel] = useState(false);
+
   const handleInput = (event) => {
     event.preventDefault();
     setCodeInput(event.target.value.toUpperCase());
   };
 
+  const winArray = winCategorys.map((winCategory) => winCategory.fields.name);
+
+  console.log(winArray);
+  let winCategoryIndex = null;
+  for (let i = 0; i < code.length; i++) {
+    if (code[i].fields.code === codeInput) {
+      winCategoryIndex = winArray.indexOf(
+        code[i].fields.winCategory.fields.name
+      );
+
+      break; // Exit the loop as soon as a match is found
+    }
+  }
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      console.log(winCategoryIndex);
+      setShowWheel(winCategoryIndex === null ? false : true);
+    }
+  };
+  console.log(winCategoryIndex);
+  console.log(code);
   return (
     <div className="overflow-hidden">
       <div className="relative h-screen w-screen">
@@ -30,19 +54,35 @@ export default function Home({ winCategorys, code }) {
         <Image src={background} fill alt="" />
       </div>
       <HorizontalGallery winCategorys={winCategorys} />
-      <div className="w-screen h-screen bg-stone-900 flex pt-64 justify-center text-white font-bold text-7xl relative">
-        <div className="text-center">
-          <div className="mb-10">Gebe hier den Code ein!</div>
-          <input
-            className="w-1/2 h-1/6 rounded-lg text-black text-center"
-            value={codeInput}
-            onChange={handleInput}
-          />
-        </div>
+      <div className="w-screen h-screen bg-stone-900 flex pt-96 justify-center text-white font-bold text-7xl relative">
+        {showWheel ? (
+          <div>
+            <div
+              style={{ bottom: "-53%" }}
+              className="absolute left-1/2 transform -translate-x-1/2"
+            >
+              <Wheel
+                winCategoryIndex={winCategoryIndex}
+                code={code}
+                winCategorys={winCategorys}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <div className="mb-10">Gebe hier den Code ein!</div>
+            <input
+              className="w-1/2 h-1/6 rounded-lg text-black text-center"
+              value={codeInput}
+              onChange={handleInput}
+              onKeyDown={handleKeyPress}
+            />
+          </div>
+        )}
 
         {/* <p className="">Glücksrad</p>
         <div style={{ bottom: "-53%" }} className="absolute ">
-          <Wheel code={code} winCategorys={winCategorys} />
+          <Wheel winCategoryIndex={winCategoryIndex} code={code} winCategorys={winCategorys} />
         </div> */}
       </div>
     </div>

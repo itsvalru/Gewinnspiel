@@ -59,6 +59,13 @@ function App(winCategorys) {
                       <div
                         key={i}
                         className="mx-2 text-white bg-black w-full h-80 rounded-2xl"
+                        style={{
+                          backgroundColor: `#${
+                            win.fields.backgroundHex
+                              ? win.fields.backgroundHex
+                              : "000000"
+                          }`,
+                        }}
                       >
                         <div className="text-black items-center text-center justify-center flex h-56 bg-white m-2 rounded-2xl">
                           {win.fields.image ? (

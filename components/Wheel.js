@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export const Wheel = ({ winCategorys, code }) => {
+export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
   // const totalValues = values.length;
 
   // const segmentSize = 360 / totalValues; // Calculate the size of each segment in degrees
@@ -34,7 +34,7 @@ export const Wheel = ({ winCategorys, code }) => {
   }
 
   const spin = 6120;
-  const winnings = winCategorys[0].fields.wins;
+  const winnings = winCategorys[winCategoryIndex].fields.wins;
   // console.log("current", currentDegree);
   // console.log("rnd", rndSpin);
   // console.log("segmentSize", segmentSize);
@@ -55,7 +55,7 @@ export const Wheel = ({ winCategorys, code }) => {
   function addLoseItems(arr) {
     const result = [];
     for (let i = 0; i < arr.length; i++) {
-      result.push({ name: "Verloren" });
+      result.push({ name: "Verloren", backgroundHex: "000000" });
       result.push(arr[i]);
     }
     return result;
@@ -103,7 +103,7 @@ export const Wheel = ({ winCategorys, code }) => {
           Spin
         </button>
         <div
-          className={`text-right absolute top-0 -right-20 ${
+          className={`text-right absolute -top-32 right-32 ${
             showWin ? "" : "hidden"
           }`}
         >
@@ -124,7 +124,9 @@ export const Wheel = ({ winCategorys, code }) => {
             <div
               className="segment circle-child flex justify-center text-black break-words text-3xl pt-10"
               style={{
-                backgroundColor: `#${winning.backgroundHex}`,
+                backgroundColor: `#${
+                  winning.backgroundHex ? winning.backgroundHex : "FFFFFF"
+                }`,
                 clipPath: `polygon(${100}% 0, 50% 100%, ${0}% 0)`,
                 transform: `rotate(${segmentSize * (i + 1)}deg)`,
               }}
