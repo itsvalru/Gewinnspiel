@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
-export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
+export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
   // const totalValues = values.length;
 
   // const segmentSize = 360 / totalValues; // Calculate the size of each segment in degrees
@@ -24,6 +26,27 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
   const [showWin, setShowWin] = useState(false);
   const [win, setWin] = useState("");
   const [rndSpin, setRndSpin] = useState(0);
+
+  const [wheelRef, wheelInView] = useInView();
+
+  const control = useAnimation();
+
+  useEffect(() => {
+    if (wheelInView) {
+      control.start("visible");
+    }
+  }, [control, wheelInView]);
+
+  const wheelVariant = {
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      rotate: 0,
+      transition: { duration: 1.5 },
+    },
+    hidden: { opacity: 0, scale: 1, rotate: -180, y: 200 },
+  };
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -68,23 +91,30 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
   useEffect(() => {
     if (currentDegree >= 0 && currentDegree <= 45) {
       setWin("Verloren");
+      winUpdate("Verloren");
     } else if (currentDegree >= 46 && currentDegree <= 90) {
-      setWin(winnings[2].fields.name);
+      //  setWin(winnings[2].fields.name);
+      winUpdate(winnings[2].fields);
     } else if (currentDegree >= 91 && currentDegree <= 135) {
       setWin("Verloren");
+      winUpdate("Verloren");
     } else if (currentDegree >= 136 && currentDegree <= 180) {
-      setWin(winnings[1].fields.name);
+      //  setWin(winnings[1].fields.name);
+      winUpdate(winnings[1].fields);
     } else if (currentDegree >= 181 && currentDegree <= 225) {
       setWin("Verloren");
+      winUpdate("Verloren");
     } else if (currentDegree >= 226 && currentDegree <= 270) {
-      setWin(winnings[0].fields.name);
+      // setWin(winnings[0].fields.name);
+      winUpdate(winnings[0].fields);
     } else if (currentDegree >= 271 && currentDegree <= 315) {
       setWin("Verloren");
+      winUpdate("Verloren");
     } else if (currentDegree >= 316 && currentDegree <= 360) {
-      setWin(winnings[3].fields.name);
-      console.log("WINNER");
+      //  setWin(winnings[3].fields.name);
+      winUpdate(winnings[3].fields);
     }
-  }, [currentDegree, win, winnings]);
+  }, [currentDegree, win, winnings, winUpdate]);
 
   const circleStyle = {
     transform: spinning ? `rotate(${spin + rndSpin}deg)` : "",
@@ -94,14 +124,20 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
   return (
     <div className="">
       <div className="relative">
-        <button
-          className="text-center absolute top-0"
-          id=""
-          onClick={() => handleSpin()}
-          disabled={showWin}
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ ease: "easeInOut", duration: 2, repeat: Infinity }}
         >
-          Spin
-        </button>
+          <button
+            className="text-center text-black border-black bg-white border-6 rounded-3xl pb-5 px-28 absolute -top-60 z-50 left-1/2 transform -translate-x-1/2"
+            onClick={() => handleSpin()}
+            disabled={showWin}
+          >
+            Spin
+          </button>
+        </motion.div>
         <div
           className={`text-right absolute -top-32 right-32 ${
             showWin ? "" : "hidden"
@@ -109,35 +145,43 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex }) => {
         >
           {win}
         </div>
-        <svg
-          className="absolute z-50 left-1/2 transform -translate-x-1/2 -top-24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#000000"
-          width="200px"
-          height="200px"
-          viewBox="0 0 1024 1024"
+
+        <motion.div
+          variants={wheelVariant}
+          animate={control}
+          ref={wheelRef}
+          initial="hidden"
         >
-          <path d="M759.2 419.8L697.4 358 512 543.4 326.6 358l-61.8 61.8L512 667z" />
-        </svg>
-        <div style={circleStyle} className="circle relative">
-          {wheelArray.map((winning, i) => (
-            <div
-              className="segment circle-child flex justify-center text-black break-words text-3xl pt-10"
-              style={{
-                backgroundColor: `#${
-                  winning.backgroundHex ? winning.backgroundHex : "FFFFFF"
-                }`,
-                clipPath: `polygon(${100}% 0, 50% 100%, ${0}% 0)`,
-                transform: `rotate(${segmentSize * (i + 1)}deg)`,
-              }}
-              key={i}
-            >
-              <div className="text-center px-5 break-normal ">
-                {winning.name}
+          <svg
+            className="absolute z-50 left-1/2 transform -translate-x-1/2 -top-24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#000000"
+            width="200px"
+            height="200px"
+            viewBox="0 0 1024 1024"
+          >
+            <path d="M759.2 419.8L697.4 358 512 543.4 326.6 358l-61.8 61.8L512 667z" />
+          </svg>
+          <div style={circleStyle} className="circle relative">
+            {wheelArray.map((winning, i) => (
+              <div
+                className="segment circle-child flex justify-center text-black break-words text-3xl pt-10"
+                style={{
+                  backgroundColor: `#${
+                    winning.backgroundHex ? winning.backgroundHex : "FFFFFF"
+                  }`,
+                  clipPath: `polygon(${100}% 0, 50% 100%, ${0}% 0)`,
+                  transform: `rotate(${segmentSize * (i + 1)}deg)`,
+                }}
+                key={i}
+              >
+                <div className="text-center px-5 break-normal ">
+                  {winning.name}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -12,10 +12,13 @@
     "contentful": "^10.6.2",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.2",
+    "framer-motion": "^10.16.4",
     "gsap": "^3.11.3",
     "next": "^13.5.4",
     "react": "18.2.0",
+    "react-confetti-explosion": "^2.1.2",
     "react-dom": "18.2.0",
+    "react-intersection-observer": "^9.5.2",
     "react-player": "^2.11.0"
   },
   "devDependencies": {

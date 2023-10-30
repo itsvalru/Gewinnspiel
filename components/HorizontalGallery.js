@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import { motion, useAnimation } from "framer-motion";
+
+import { useInView } from "react-intersection-observer";
 
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function App(winCategorys) {
+function HorizontalScrollWinCategorys(winCategorys) {
   const scroller = useRef();
   const skills = useRef();
 
@@ -29,12 +32,11 @@ function App(winCategorys) {
         end: () => "+=" + window.innerWidth,
       },
     });
-
     return () => {
       to.kill();
     };
   }, []);
-  console.log(winCategorys);
+
   return (
     <div className="overflow-hidden flex">
       <div className="overflow-hidden ">
@@ -44,19 +46,23 @@ function App(winCategorys) {
           className=" flex overflow-x-hidden w-[400vw] m-0 bg-gray-100  relative h-screen"
         >
           {winCategorys.winCategorys.map((winCategoty, i) => (
-            <section
+            <a
+              href="https://www.esn.com/"
               key={i}
               ref={skills}
+              initial="hidden"
               className="skill-set px-20 w-screen h-full bg-transparent ns-horizontal-section__item flex items-center z-50"
             >
               <div className="w-full h-full flex items-center justify-center">
                 <div className="w-full">
-                  <div className="text-7xl font-bold text-center mb-16">
+                  <motion.div className="text-7xl font-bold text-center mb-16">
                     {winCategoty.fields.name}
-                  </div>
+                  </motion.div>
                   <div className="text-2xl font-bold flex justify-center grid grid-cols-2 gap-10">
                     {winCategoty.fields.wins.map((win, i) => (
-                      <div
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
                         key={i}
                         className="mx-2 text-white bg-black w-full h-80 rounded-2xl"
                         style={{
@@ -82,12 +88,12 @@ function App(winCategorys) {
                         <div className="w-full flex justify-center mt-6 text-3xl">
                           {win.fields.name}
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
               </div>
-            </section>
+            </a>
           ))}
         </div>
       </div>
@@ -95,4 +101,4 @@ function App(winCategorys) {
   );
 }
 
-export default App;
+export default HorizontalScrollWinCategorys;
