@@ -37,6 +37,7 @@ function HorizontalScrollWinCategorys(winCategorys) {
     };
   }, []);
 
+  console.log(winCategorys.winCategorys);
   return (
     <div className="overflow-hidden flex">
       <div className="overflow-hidden ">
@@ -46,8 +47,7 @@ function HorizontalScrollWinCategorys(winCategorys) {
           className=" flex overflow-x-hidden w-[400vw] m-0 bg-gray-100  relative h-screen"
         >
           {winCategorys.winCategorys.map((winCategoty, i) => (
-            <a
-              href="https://www.esn.com/"
+            <div
               key={i}
               ref={skills}
               initial="hidden"
@@ -58,7 +58,7 @@ function HorizontalScrollWinCategorys(winCategorys) {
                   <motion.div className="text-7xl font-bold text-center mb-16">
                     {winCategoty.fields.name}
                   </motion.div>
-                  <div className="text-2xl font-bold flex justify-center grid grid-cols-2 gap-10">
+                  <div className="text-2xl font-bold flex justify-center grid grid-cols-2 gap-10 cursor-pointer">
                     {winCategoty.fields.wins.map((win, i) => (
                       <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -73,7 +73,10 @@ function HorizontalScrollWinCategorys(winCategorys) {
                           }`,
                         }}
                       >
-                        <div className="text-black items-center text-center justify-center flex h-56 bg-white m-2 rounded-2xl">
+                        <a
+                          href={win.fields.href}
+                          className="text-black items-center text-center justify-center flex h-56 bg-white m-2 rounded-2xl"
+                        >
                           {win.fields.image ? (
                             <Image
                               src={`https:${win.fields.image.fields.file.url}`}
@@ -84,7 +87,7 @@ function HorizontalScrollWinCategorys(winCategorys) {
                           ) : (
                             <div>Image</div>
                           )}
-                        </div>
+                        </a>
                         <div className="w-full flex justify-center mt-6 text-3xl">
                           {win.fields.name}
                         </div>
@@ -93,7 +96,7 @@ function HorizontalScrollWinCategorys(winCategorys) {
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>

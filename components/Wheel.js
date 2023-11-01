@@ -58,9 +58,6 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
 
   const spin = 6120;
   const winnings = winCategorys[winCategoryIndex].fields.wins;
-  // console.log("current", currentDegree);
-  // console.log("rnd", rndSpin);
-  // console.log("segmentSize", segmentSize);
   console.log("Categorys", winCategorys[0]);
   console.log("code", code);
 
@@ -85,36 +82,34 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
   }
 
   const wheelArray = addLoseItems(winnings.map((winning) => winning.fields));
-
-  //console.log(wheelArray);
-
+  console.log(winnings[0].fields);
   useEffect(() => {
     if (currentDegree >= 0 && currentDegree <= 45) {
       setWin("Verloren");
       winUpdate("Verloren");
     } else if (currentDegree >= 46 && currentDegree <= 90) {
       //  setWin(winnings[2].fields.name);
-      winUpdate(winnings[2].fields);
+      spinning ? winUpdate(winnings[2].fields) : null;
     } else if (currentDegree >= 91 && currentDegree <= 135) {
       setWin("Verloren");
       winUpdate("Verloren");
     } else if (currentDegree >= 136 && currentDegree <= 180) {
       //  setWin(winnings[1].fields.name);
-      winUpdate(winnings[1].fields);
+      spinning ? winUpdate(winnings[1].fields) : null;
     } else if (currentDegree >= 181 && currentDegree <= 225) {
       setWin("Verloren");
       winUpdate("Verloren");
     } else if (currentDegree >= 226 && currentDegree <= 270) {
       // setWin(winnings[0].fields.name);
-      winUpdate(winnings[0].fields);
+      spinning ? winUpdate(winnings[0].fields) : null;
     } else if (currentDegree >= 271 && currentDegree <= 315) {
       setWin("Verloren");
       winUpdate("Verloren");
     } else if (currentDegree >= 316 && currentDegree <= 360) {
       //  setWin(winnings[3].fields.name);
-      winUpdate(winnings[3].fields);
+      spinning ? winUpdate(winnings[3].fields) : null;
     }
-  }, [currentDegree, win, winnings, winUpdate]);
+  }, [currentDegree, win, winnings, winUpdate, spinning]);
 
   const circleStyle = {
     transform: spinning ? `rotate(${spin + rndSpin}deg)` : "",
@@ -125,13 +120,14 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
     <div className="">
       <div className="relative">
         <motion.div
+          whileTap={{ scale: 0.9 }}
           animate={{
             scale: [1, 1.1, 1],
           }}
           transition={{ ease: "easeInOut", duration: 2, repeat: Infinity }}
         >
           <button
-            className="text-center text-black border-black bg-white border-6 rounded-3xl pb-5 px-28 absolute -top-60 z-50 left-1/2 transform -translate-x-1/2"
+            className="text-center text-black border-black bg-white border-6 rounded-3xl pb-5 px-28 absolute -top-60 z-50 left-1/2 transform -translate-x-1/2 hover:bg-black hover:text-white transition duration-700 ease-in-out"
             onClick={() => handleSpin()}
             disabled={showWin}
           >
@@ -142,9 +138,7 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
           className={`text-right absolute -top-32 right-32 ${
             showWin ? "" : "hidden"
           }`}
-        >
-          {win}
-        </div>
+        ></div>
 
         <motion.div
           variants={wheelVariant}

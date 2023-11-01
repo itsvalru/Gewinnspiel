@@ -19,6 +19,7 @@ export default function Home({ winCategorys, code }) {
   const [showWheel, setShowWheel] = useState(false);
   const [win, setWin] = useState(null);
   const [showWin, setShowWin] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInput = (event) => {
     event.preventDefault();
@@ -62,6 +63,9 @@ export default function Home({ winCategorys, code }) {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       console.log(winCategoryIndex);
+      setErrorMessage(
+        winCategoryIndex === null ? "Überprüfe ob der Code korrekt ist!" : ""
+      );
       setShowWheel(winCategoryIndex === null ? false : true);
     }
   };
@@ -75,7 +79,7 @@ export default function Home({ winCategorys, code }) {
     if (newWin === "Verloren") {
       setShowWin(false);
     } else {
-      sleep(12000).then(() => {
+      sleep(10300).then(() => {
         setShowWin(true);
       });
     }
@@ -160,11 +164,14 @@ export default function Home({ winCategorys, code }) {
           <div className="text-center">
             <div className="mb-10">Gebe hier den Code ein!</div>
             <input
-              className="w-1/2 h-1/6 rounded-lg text-black text-center"
+              className={`w-1/2 h-1/6 rounded-lg text-black text-center ${
+                errorMessage === "" ? "" : "bg-red-600 text-white"
+              }`}
               value={codeInput}
               onChange={handleInput}
               onKeyDown={handleKeyPress}
             />
+            <div className="text-2xl text-red-600 mt-8">{errorMessage}</div>
           </div>
         )}
 
