@@ -56,7 +56,7 @@ export default function Home({ winCategorys, code }) {
         code[i].fields.winCategory.fields.name
       );
 
-      break; // Exit the loop as soon as a match is found
+      break;
     }
   }
 
@@ -77,7 +77,9 @@ export default function Home({ winCategorys, code }) {
   const handleWinUpdate = (newWin) => {
     setWin(newWin);
     if (newWin === "Verloren") {
-      setShowWin(false);
+      sleep(10300).then(() => {
+        setShowWin(true);
+      });
     } else {
       sleep(10300).then(() => {
         setShowWin(true);
@@ -97,32 +99,43 @@ export default function Home({ winCategorys, code }) {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-2/4 w-1/3 bg-white rounded-3xl">
               <div className="w-full h-full rounded-2xl relative">
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-                  <ConfettiExplosion
-                    className="z-50"
-                    force={0.8}
-                    duration={6000}
-                    particleCount={400}
-                    width={3000}
-                    height={2000}
-                  />
+                  {win.name ? (
+                    <ConfettiExplosion
+                      className="z-50"
+                      force={0.8}
+                      duration={6000}
+                      particleCount={400}
+                      width={3000}
+                      height={2000}
+                    />
+                  ) : null}
                 </div>
                 <div className="text-black items-center text-center justify-center flex h-56 m-2 rounded-2xl">
                   {win.image ? (
+                    win.image ? (
+                      <Image
+                        src={`https:${win.image.fields.file.url}`}
+                        width={150}
+                        height={150}
+                        alt=""
+                      />
+                    ) : (
+                      <div>Image</div>
+                    )
+                  ) : (
                     <Image
-                      src={`https:${win.image.fields.file.url}`}
+                      src={`https:media.istockphoto.com/id/932022348/vector/sad-face-icon-unhappy-face-symbol.jpg?s=612x612&w=0&k=20&c=ZpGiAAFxUNnde83WA2mqotDiZF2lFukmu5vs8fHc8rA=`}
                       width={150}
                       height={150}
-                      alt="Picture of the author"
+                      alt=""
                     />
-                  ) : (
-                    <div>Image</div>
                   )}
                 </div>
                 <div className="w-full flex justify-center mt-6 text-3xl">
-                  {win.name}
+                  {win.name ? win.name : "Verloren"}
                 </div>
                 <div className="w-full flex justify-center mt-12 text-3xl">
-                  Code: USP0J4
+                  {win.name ? "Code: USP0J4" : ""}
                 </div>
               </div>
             </div>

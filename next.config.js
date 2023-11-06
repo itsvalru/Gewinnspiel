@@ -7,6 +7,10 @@ module.exports = nextConfig;
 
 module.exports = {
   images: {
-    domains: ["images.pexels.com", "images.ctfassets.net"],
+    domains: [
+      "images.pexels.com",
+      "images.ctfassets.net",
+      "media.istockphoto.com",
+    ],
   },
 };
