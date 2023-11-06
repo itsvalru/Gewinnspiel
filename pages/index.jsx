@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import HorizontalGallery from "../components/HorizontalGallery";
+import HorizontalScroll from "../components/HorizontalScroll";
 import background from "../public/img/background.png";
 import ESNLogo from "../public/img/ESNLogo.png";
 import icon from "../public/img/icon.png";
@@ -70,25 +70,17 @@ export default function Home({ winCategorys, code }) {
     }
   };
 
-  function sleep(ms) {
+  const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  };
 
   const handleWinUpdate = (newWin) => {
     setWin(newWin);
-    if (newWin === "Verloren") {
-      sleep(10300).then(() => {
-        setShowWin(true);
-      });
-    } else {
-      sleep(10300).then(() => {
-        setShowWin(true);
-      });
-    }
+    sleep(10300).then(() => {
+      setShowWin(true);
+    });
   };
-
   console.log(code);
-  console.log(win);
   return (
     <div className="overflow-hidden font-bold">
       <div className="relative h-screen w-screen">
@@ -157,7 +149,7 @@ export default function Home({ winCategorys, code }) {
         </div>
         <Image src={background} fill alt="" />
       </div>
-      <HorizontalGallery winCategorys={winCategorys} />
+      <HorizontalScroll winCategorys={winCategorys} />
       <div className="w-screen h-screen bg-stone-900 flex pt-96 justify-center text-white font-bold text-7xl relative">
         {showWheel ? (
           <div
@@ -187,11 +179,6 @@ export default function Home({ winCategorys, code }) {
             <div className="text-2xl text-red-600 mt-8">{errorMessage}</div>
           </div>
         )}
-
-        {/* <p className="">Glücksrad</p>
-        <div style={{ bottom: "-53%" }} className="absolute ">
-          <Wheel winCategoryIndex={winCategoryIndex} code={code} winCategorys={winCategorys} />
-        </div> */}
       </div>
     </div>
   );

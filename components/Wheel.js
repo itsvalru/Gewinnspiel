@@ -24,7 +24,7 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
   const [spinning, setSpinning] = useState(false);
   const [currentDegree, setCurrentDegree] = useState(360 - segmentSize / 2);
   const [showWin, setShowWin] = useState(false);
-  const [win, setWin] = useState("");
+
   const [rndSpin, setRndSpin] = useState(0);
 
   const [wheelRef, wheelInView] = useInView();
@@ -83,34 +83,23 @@ export const Wheel = ({ winCategorys, code, winCategoryIndex, winUpdate }) => {
 
   const wheelArray = addLoseItems(winnings.map((winning) => winning.fields));
   console.log(winnings[0].fields);
-  useEffect(() => {
-    if (currentDegree >= 0 && currentDegree <= 45) {
-      setWin("Verloren");
-      winUpdate("Verloren");
-    } else if (currentDegree >= 46 && currentDegree <= 90) {
-      //  setWin(winnings[2].fields.name);
-      spinning ? winUpdate(winnings[2].fields) : null;
-    } else if (currentDegree >= 91 && currentDegree <= 135) {
-      setWin("Verloren");
-      winUpdate("Verloren");
-    } else if (currentDegree >= 136 && currentDegree <= 180) {
-      //  setWin(winnings[1].fields.name);
-      spinning ? winUpdate(winnings[1].fields) : null;
-    } else if (currentDegree >= 181 && currentDegree <= 225) {
-      setWin("Verloren");
-      winUpdate("Verloren");
-    } else if (currentDegree >= 226 && currentDegree <= 270) {
-      // setWin(winnings[0].fields.name);
-      spinning ? winUpdate(winnings[0].fields) : null;
-    } else if (currentDegree >= 271 && currentDegree <= 315) {
-      setWin("Verloren");
-      winUpdate("Verloren");
-    } else if (currentDegree >= 316 && currentDegree <= 360) {
-      //  setWin(winnings[3].fields.name);
-      spinning ? winUpdate(winnings[3].fields) : null;
-    }
-  }, [currentDegree, win, winnings, winUpdate, spinning]);
 
+  useEffect(() => {
+    if (spinning) {
+      if (currentDegree >= 46 && currentDegree <= 90) {
+        winUpdate(winnings[2].fields);
+      } else if (currentDegree >= 136 && currentDegree <= 180) {
+        winUpdate(winnings[1].fields);
+      } else if (currentDegree >= 226 && currentDegree <= 270) {
+        winUpdate(winnings[0].fields);
+      } else if (currentDegree >= 316 && currentDegree <= 360) {
+        winUpdate(winnings[3].fields);
+      } else {
+        winUpdate("Verloren");
+      }
+    }
+  }, [currentDegree, winnings, winUpdate, spinning]);
+  console.log(spinning);
   const circleStyle = {
     transform: spinning ? `rotate(${spin + rndSpin}deg)` : "",
     transition: "transform 10s",
